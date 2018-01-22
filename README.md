@@ -30,26 +30,32 @@ Parameters to adjust
 --------------------
 
 -   Distribution of underlaying points.
--   Uniform. \[✓\]
--   Waves.
--   Normal. \[✓\]
+    -   Uniform. (uniform) \[✓\]
+    -   Sine waves. (sinx, siny, sinxy) \[✓\]
+    -   Normal. (normal) \[✓\]
 -   Starting Polygon.
--   Square. \[✓\]
--   n-gon.
+    -   Square. \[✓\]
+    -   n-gon. \[work in progress\]
 -   Number of steps.
+    -   Predetermined. \[✓\]
+    -   Terminating. \[\]
 -   Wiggleing of polygon.
--   Polygons are wiggled individually.
--   Polygon corners are wiggled seperately.
--   Polygons are wiggled depending on size.
+    -   Polygons are wiggled individually. \[✓\]
+    -   Polygon corners are wiggled seperately. \[\]
+    -   Polygons are wiggled depending on size. \[\]
+    -   Types of wiggles.
+        -   Normal. \[✓\]
+        -   Uniform. \[\]
+        -   Custom. \[\]
 -   Rotate polygons.
--   Polygons are rotated indivudually.
-    -   Randomly.
-    -   deterministicly.
--   Background color.
+    -   Polygons are rotated indivudually.
+        -   Randomly. \[\]
+        -   deterministicly. \[\]
+-   Background color. \[✓\]
 -   Polygon color.
--   randomly.
--   deterministicly.
--   Choice of palette.
+    -   randomly. \[\]
+    -   deterministicly. \[\]
+    -   Choice of palette. \[\]
 
 vizualize
 ---------
@@ -82,7 +88,7 @@ start <- Sys.time() %>% str_extract(".{10}")
 
 nr <- sum(list.files() %>% str_detect(start)) + 1
 
-file_name <- glue("{start}-squares-{nr}.png")
+file_name <- glue("res/{start}-squares-{nr}.png")
 
 ggsave(filename = file_name, plot = p, dpi = 900, type = "cairo")
 ```

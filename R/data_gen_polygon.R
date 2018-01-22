@@ -24,7 +24,86 @@ data_gen_polygon <- function(polygon, n, type = "uniform", tolerance = 0.1,
     x_gen_fun <- function(n) rnorm(n = n, mean = x_mid, ...)
     y_gen_fun <- function(n) rnorm(n = n, mean = y_mid, ...)
   }
-    
+  if(type == "sinx") {
+    x_gen_fun <- function(n) {
+      out <- numeric()
+      x <- runif(n, min = x_range[1], max = x_range[2])
+      out <- c(out, x[(sin(x * 25) + 1.3) > runif(n, 
+                                                  min = x_range[1], 
+                                                  max = x_range[2])])
+      
+      hitrate <- length(out) / n
+      
+      while(length(out) < n) {
+        n_sim <- ceiling((n - length(out)) / hitrate * 1.1)
+        x <- runif(n_sim, min = x_range[1], max = x_range[2])
+        out <- c(out, x[(sin(x * 25) + 1.3) > runif(n_sim, 
+                                                    min = x_range[1], 
+                                                    max = x_range[2])])
+      }
+      out[seq_len(n)]
+    }
+    y_gen_fun <- function(n) runif(n = n, min = y_range[1], max = y_range[2])
+  }
+  if(type == "siny") {
+    x_gen_fun <- function(n) runif(n = n, min = x_range[1], max = x_range[2])
+    y_gen_fun <- function(n) {
+      out <- numeric()
+      x <- runif(n, min = y_range[1], max = y_range[2])
+      out <- c(out, x[(sin(x * 25) + 1.3) > runif(n, 
+                                                  min = y_range[1], 
+                                                  max = y_range[2])])
+      
+      hitrate <- length(out) / n
+      
+      while(length(out) < n) {
+        n_sim <- ceiling((n - length(out)) / hitrate * 1.1)
+        x <- runif(n_sim, min = y_range[1], max = y_range[2])
+        out <- c(out, x[(sin(x * 25) + 1.3) > runif(n_sim, 
+                                                    min = y_range[1], 
+                                                    max = y_range[2])])
+      }
+      out[seq_len(n)]
+    }
+  }
+  if(type == "sinxy") {
+    x_gen_fun <- function(n) {
+      out <- numeric()
+      x <- runif(n, min = x_range[1], max = x_range[2])
+      out <- c(out, x[(sin(x * 25) + 1.3) > runif(n, 
+                                                  min = x_range[1], 
+                                                  max = x_range[2])])
+      
+      hitrate <- length(out) / n
+      
+      while(length(out) < n) {
+        n_sim <- ceiling((n - length(out)) / hitrate * 1.1)
+        x <- runif(n_sim, min = x_range[1], max = x_range[2])
+        out <- c(out, x[(sin(x * 25) + 1.3) > runif(n_sim, 
+                                                    min = x_range[1], 
+                                                    max = x_range[2])])
+      }
+      out[seq_len(n)]
+    }
+    y_gen_fun <- function(n) {
+      out <- numeric()
+      x <- runif(n, min = y_range[1], max = y_range[2])
+      out <- c(out, x[(sin(x * 25) + 1.3) > runif(n, 
+                                                  min = y_range[1], 
+                                                  max = y_range[2])])
+      
+      hitrate <- length(out) / n
+      
+      while(length(out) < n) {
+        n_sim <- ceiling((n - length(out)) / hitrate * 1.1)
+        x <- runif(n_sim, min = y_range[1], max = y_range[2])
+        out <- c(out, x[(sin(x * 25) + 1.3) > runif(n_sim, 
+                                                    min = y_range[1], 
+                                                    max = y_range[2])])
+      }
+      out[seq_len(n)]
+    }
+  }
   
   x <- x_gen_fun(n)
   y <- y_gen_fun(n)
