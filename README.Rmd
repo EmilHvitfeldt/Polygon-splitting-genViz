@@ -1,0 +1,113 @@
+---
+title: "Untitled"
+author: "Emil Hvitfeldt Hansen"
+date: "1/15/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Polygon splitting genViz
+
+### Packages
+
+```{r}
+library(tidyverse)
+library(ehlib)
+library(sp)
+library(rgeos)
+library(mgcv)
+library(glue)
+library(viridis)
+```
+
+### Loading custom functions
+
+```{r}
+sapply(paste0("R/", list.files("R/")), source, .GlobalEnv)
+```
+
+## How this works
+
+Start with a polygon. Generate a large number of points inside that polygon. Use kmeans based on said points to cut polygon into 2 polygons. Pick new polygon (random or deterministic), repeat as nesesary.
+
+## Parameters to adjust
+
+- Distribution of underlaying points.
+  - Uniform. [✓]
+  - Waves.
+  - Normal. [✓]
+- Starting Polygon.
+  - Square. [✓]
+  - n-gon.
+- Number of steps.
+- Wiggleing of polygon.
+  - Polygons are wiggled individually.
+  - Polygon corners are wiggled seperately.
+  - Polygons are wiggled depending on size.
+- Rotate polygons.
+  - Polygons are rotated indivudually.
+    - Randomly.
+    - deterministicly.
+- Background color.
+- Polygon color.
+  - randomly.
+  - deterministicly.
+  - Choice of palette.
+
+## vizualize
+
+```{r}
+starting_polygon <- data.frame(x = c(0, 0.5, 1, 0, 0),
+                               y = c(0, 0, 1, 0.5, 0),
+                               id = "1",
+                               stringsAsFactors = FALSE)
+
+data <- data_gen_polygon(starting_polygon, 50000, type = "uniform")
+
+p <- gen_art(starts_data = data, start_poly = starting_polygon, steps = 50) %>%
+  wiggle(sd = 1 / 100) %>%
+  ggplot(aes(x, y, group = id, color = factor(id))) +
+  geom_path() +
+  theme_void() +
+  guides(color = "none") +
+  theme(plot.background = element_rect(fill = 'black', colour = 'black')) +
+  scale_color_viridis(discrete = TRUE, option = "plasma")
+p
+```
+
+
+```{r}
+data <- data.frame(X = runif(n = 50000),
+                   Y = runif(n = 50000),
+                   id = "1", 
+                   stringsAsFactors = FALSE)
+
+pols <- data.frame(x = c(0, 1, 1, 0, 0),
+                   y = c(0, 0, 1, 1, 0),
+                   id = "1",
+                   stringsAsFactors = FALSE)
+
+p <- gen_art(starts_data = data, start_poly = pols, steps = 100) %>%
+  wiggle(sd = 1 / 10) %>%
+  ggplot(aes(x, y, group = id, color = factor(id))) +
+  geom_path() +
+  theme_void() +
+  guides(color = "none") +
+  theme(plot.background = element_rect(fill = 'black', colour = 'black')) +
+  scale_color_viridis(discrete = TRUE, option = "plasma")
+p
+```
+
+```{r}
+start <- Sys.time() %>% str_extract(".{10}")
+
+nr <- sum(list.files() %>% str_detect(start)) + 1
+
+file_name <- glue("{start}-squares-{nr}.png")
+
+ggsave(filename = file_name, plot = p, dpi = 900, type = "cairo")
+```
+
